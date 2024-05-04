@@ -363,7 +363,8 @@ class Helper:
         return ret
 
     def analyze(self, cr: CrashReport):
-        self._out.append(f'## Primitive Automated Analysis of Crash Report {cr.url}')
+        self._out.append(f'## Primitive Automated Analysis of Crash Report')
+        self._out.append(cr.url)
 
         # early checks. checks for uninteresting CRs and immediately return
         if cr.truncated:
