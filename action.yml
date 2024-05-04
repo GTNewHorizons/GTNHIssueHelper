@@ -1,0 +1,17 @@
+name: "Annotate GTNH issue"
+description: "Annotate GTNH issue upon their creation"
+inputs:
+  formdata:
+    description: "Parsed form data as a json string"
+    required: true
+  sections:
+    description: "Form data sections to search"
+    required: false
+    default: "Crash Report"
+outputs:
+  comment:
+    description: "Comment to be sent to issue. Can be empty if nothing worthwhile is found."
+runs:
+  using: docker
+  image: Dockerfile
+
