@@ -406,7 +406,10 @@ class Helper:
                     logging.error('error analyzing cr %s', i, exc_info=True)
                     continue
             if 'GITHUB_OUTPUT' in os.environ:
-                gha_utils.set_output('comments', '\n'.join(self._out))
+                with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                    f.write('comments<<__XSAJXAXJIO_EOF')
+                    f.writelines(l + '\n' for l in self._out)
+                    f.write('__XSAJXAXJIO_EOF')
             else:
                 for line in self._out:
                     print(line)
