@@ -273,7 +273,7 @@ class Helper:
 
     def _search_section(self, section_key: str) -> list[CrashReport]:
         ret = []
-        cr_data = self._issue_form_data[section_key]
+        cr_data = self._issue_form_data.get(section_key, {})
         if '---- Minecraft Crash Report ----' in cr_data and 'Is Modded' in cr_data:
             istart = cr_data.find('---- Minecraft Crash Report ----')
             while istart != -1:
