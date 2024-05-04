@@ -273,7 +273,7 @@ class Helper:
 
     def _search_section(self, section_key: str) -> list[CrashReport]:
         ret = []
-        cr_data = self._issue_form_data.get(section_key, {})
+        cr_data = self._issue_form_data.get(section_key, '')
         if '---- Minecraft Crash Report ----' in cr_data and 'Is Modded' in cr_data:
             istart = cr_data.find('---- Minecraft Crash Report ----')
             while istart != -1:
@@ -368,8 +368,8 @@ class Helper:
         # early checks. checks for uninteresting CRs and immediately return
         if cr.truncated:
             self._out.append('CRASH REPORT IS TRUNCATED. This will not help to get your problem fixed!!!')
-        if cr.main_stack_trace[:2] == ['java.lang.NullPointerException',
-                                       'at cpw.mods.fml.common.network.internal.FMLProxyPacket.func_148833_a(FMLProxyPacket.java:101)']:
+        if cr.main_stack_trace[0] == 'java.lang.NullPointerException' and \
+                'cpw.mods.fml.common.network.internal.FMLProxyPacket' in cr.main_stack_trace[1]:
             self._out.append(f'This crash report is near useless. Try post fml-client-latest.log instead.')
             return
         if any('ChunkIOProvider' in e for e in cr.main_stack_trace):
