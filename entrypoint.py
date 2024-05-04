@@ -407,9 +407,9 @@ class Helper:
                     continue
             if 'GITHUB_OUTPUT' in os.environ:
                 with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-                    f.write('comments<<__XSAJXAXJIO_EOF')
+                    f.write('comments<<__XSAJXAXJIO_EOF\n')
                     f.writelines(l + '\n' for l in self._out)
-                    f.write('__XSAJXAXJIO_EOF')
+                    f.write('__XSAJXAXJIO_EOF\n')
             else:
                 for line in self._out:
                     print(line)
