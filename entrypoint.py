@@ -330,7 +330,7 @@ class Helper:
                 continue
             content = req.text
             if content.startswith('---- Minecraft Crash Report ----'):
-                ret.append(CrashReport(download_url, content))
+                ret.append(CrashReport(url, content))
                 continue
             if re.match(r'\[\d{2}:\d{2}:\d{2}] \[[^/]+/(INFO|DEBUG|TRACE|WARN|ERROR)] \[.+/.+]:', content):
                 # probably a fml-client-latest.log
