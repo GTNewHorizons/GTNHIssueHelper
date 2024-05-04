@@ -366,7 +366,7 @@ class Helper:
         if cr.main_stack_trace[0] == 'java.lang.RuntimeException: Chunk build failed':
             self._out.append('Possibly an Angelica problem. Try remove this mod and see if this fixes your problem.')
         formatted_stack_trace = '\n'.join(cr.main_stack_trace)
-        self._out.append(f'<details><summary>Stacktrace</summary>{formatted_stack_trace}</details>')
+        self._out.append(f'<details><summary>Stacktrace</summary><pre>{formatted_stack_trace}</pre></details>')
 
         if not self.get_mod_list(cr.side):
             return
@@ -389,10 +389,10 @@ class Helper:
                 self._out.append(f'* {filename}')
             self._out.append('</details>')
         if added:
-            self._out.append(f'<details><summary>Added mods</summary>')
+            self._out.append(f'<details><summary>Added mods</summary><ul>')
             for filename in added:
-                self._out.append(f'* {filename} ({cr_mods[filename].modname})')
-            self._out.append('</details>')
+                self._out.append(f'<li>{filename} ({cr_mods[filename].modname})</li>')
+            self._out.append('</ul></details>')
 
     def main(self):
         with gha_utils.group('Checking crash report'):
