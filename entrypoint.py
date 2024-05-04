@@ -8,7 +8,7 @@ import zipfile
 from dataclasses import dataclass
 from functools import lru_cache, cached_property
 from logging.config import dictConfig
-from typing import Optional, Tuple, Generator
+from typing import Optional, Tuple, Generator, Iterable
 from urllib.parse import urlparse
 
 import github_action_utils as gha_utils
@@ -348,6 +348,20 @@ class Helper:
     def get_mod_filename_set(self, side: Side) -> set[str]:
         return {v.filename for _, v in self.get_mod_list(side)}
 
+    def _filter_missing(self, cr: CrashReport, missing: Iterable[str]) -> list[str]:
+        ret = []
+        for filename in missing:
+            if 'healer' in filename.lower() or 'codechickenlib' in filename.lower():
+                # these are unfortunately invisible on the crash report
+                # healer did not provide a mod container
+                # CCL is a pure library without any entry point
+                continue
+            if not cr.is_recent_java() and 'lwjgl3ify' in filename.lower():
+                # doesn't need it
+                continue
+            ret.append(filename)
+        return ret
+
     def analyze(self, cr: CrashReport):
         self._out.append(f'# Primitive Automated Analysis of Crash Report {cr.url}')
 
@@ -373,21 +387,13 @@ class Helper:
         cr_mods = {mod.filename: mod for mod in cr.mod_list}
         cr_mods_set = set(cr_mods.keys())
         base_mods_set = self.get_mod_filename_set(cr.side)
-        missing = base_mods_set - cr_mods_set
+        missing = self._filter_missing(cr, base_mods_set - cr_mods_set)
         added = cr_mods_set - base_mods_set
         if missing:
-            self._out.append(f'<details><summary>Missing mods</summary>')
+            self._out.append(f'<details><summary>Missing mods</summary><ul>')
             for filename in missing:
-                if 'healer' in filename.lower() or 'codechickenlib' in filename.lower():
-                    # these are unfortunately invisible on the crash report
-                    # healer did not provide a mod container
-                    # CCL is a pure library without any entry point
-                    continue
-                if not cr.is_recent_java() and 'lwjgl3ify' in filename.lower():
-                    # doesn't need it
-                    continue
-                self._out.append(f'* {filename}')
-            self._out.append('</details>')
+                self._out.append(f'<li>{filename}</li>')
+            self._out.append('</ul></details>')
         if added:
             self._out.append(f'<details><summary>Added mods</summary><ul>')
             for filename in added:
