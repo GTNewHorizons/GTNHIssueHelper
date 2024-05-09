@@ -118,6 +118,12 @@ class CrashReport:
         # after java 8 they changed to 11.x.x, instead of forever sticking with 1 as major version
         return self.java_version is not None and not self.java_version.startswith('1.')
 
+    def has_optifine(self):
+        return 'Optifine is installed' in self.content
+
+    def has_angelica(self):
+        return any(e.modid == 'angelica' for e in self.mod_list)
+
     def __hash__(self):
         return hash(self.url)
 
@@ -362,6 +368,11 @@ class Helper:
             ret.append(filename)
         return ret
 
+    def _iter_likely_dev_jar_mods(self, cr: CrashReport) -> list[str]:
+        for e in cr.mod_list:
+            if e.filename.endswith('-dev.jar') or e.filename.endswith('-deobf.jar'):
+                yield e.filename
+
     def analyze(self, cr: CrashReport):
         self._out.append(f'## Primitive Automated Analysis of Crash Report')
         self._out.append(cr.url)
@@ -375,6 +386,13 @@ class Helper:
             return
         if any('ChunkIOProvider' in e for e in cr.main_stack_trace):
             self._out.append(f'This crash report suggests world corruption. Try restore from a backup.')
+            return
+        if any(self._iter_likely_dev_jar_mods(cr)):
+            self._out.append('Dev jar detected. Use the jar without -dev or -deobf in filename.')
+            self._out.extend(self._iter_likely_dev_jar_mods(cr))
+            return
+        if cr.has_angelica() and cr.has_optifine():
+            self._out.append('Both optifine and angelica detected. They are not compatible with each other. Remove either to proceed.')
             return
 
         # Now some real diagnostics
