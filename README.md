@@ -9,6 +9,8 @@ Helps to parse the issue and gives some automated response, either to help the i
 3. Detect truncated crash reports
 4. Tell the user to upload fml-client-latest.log instead if being greeted by a NPE from FMLProxyPacket
 5. Diff the reported modlist with the reported modpack version. NOTE: currently limited to V2 manifest. 
+6. Detect dev jar.
+7. Detect installing both angelica and optifine 
 
 ## Refactoring
 
@@ -19,4 +21,4 @@ In any case, a refactor is always welcomed AS LONG AS it's accompanied by some n
 
 ## Limitations
 
-Cannot parse
+Cannot parse release manifest in v1. These are pretty old though.
