@@ -431,12 +431,12 @@ class Helper:
         missing = self._filter_missing(cr, base_mods_set - cr_mods_set)
         added = cr_mods_set - base_mods_set
         if missing:
-            self._out.append(f'<details><summary>Missing mods</summary><ul>')
+            self._out.append(f'<details><summary>Missing {len(missing)} mods</summary><ul>')
             for filename in missing:
                 self._out.append(f'<li>{filename}</li>')
             self._out.append('</ul></details>')
         if added:
-            self._out.append(f'<details><summary>Added mods</summary><ul>')
+            self._out.append(f'<details><summary>Added {len(added)} mods</summary><ul>')
             for filename in added:
                 self._out.append(f'<li>{filename} ({cr_mods[filename].modname})</li>')
             self._out.append('</ul></details>')
