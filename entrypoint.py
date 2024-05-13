@@ -173,10 +173,25 @@ class InstalledMod:
                 # uh, no idea what's this
                 return None
             res['filename'] = func(match)
+        else:
+            res['filename'] = cls.fix_curse_filename(res['filename'])
         status = res.pop('status')
         res['errored'] = 'E' in status
         res['disabled'] = 'D' in status
         return cls(**res)
+
+    @classmethod
+    def fix_curse_filename(cls, filename: str) -> str:
+        # some mods have different filename between assets json and when downloaded by curse/deploader of curse release
+        # replace it with the one in manifest
+        new_name = filename
+        if filename.startswith('Thaumic-Machina'):
+            new_name = filename.replace('-', ' ', 1)
+        if re.fullmatch(r'CraftPresence-.+\+1\.7\.10\.jar', filename):
+            new_name = re.fullmatch(r'CraftPresence-(.+)\+1\.7\.10\.jar', filename).expand(r'CraftPresence-\1-1.7.10.jar')
+        if new_name != filename:
+            gha_utils.warning(f'Replaced curse file name {filename} with {new_name}')
+        return new_name
 
 
 def _iter_nightly_runs(session: requests.Session) -> Generator[dict, None, None]:
@@ -346,10 +361,16 @@ class Helper:
 
     def get_mod_list(self, side: Side) -> list[Tuple[GTNHModInfo, GTNHVersion]]:
         try:
-            return get_official_mods(self._issue_form_data['Your Pack Version'].split()[0].strip().lower(), side)
+            return get_official_mods(self.modpack_version, side)
         except Exception:
             logging.error('error fetching cr mod list', exc_info=True)
             return []
+
+    @cached_property
+    def modpack_version(self):
+        v = self._issue_form_data['Your Pack Version'].split()[0].strip().lower()
+        gha_utils.debug(f'Parsed modpack version: {v}')
+        return v
 
     def get_mod_filename_set(self, side: Side) -> set[str]:
         return {v.filename for _, v in self.get_mod_list(side)}
@@ -402,6 +423,7 @@ class Helper:
         self._out.append(f'<details><summary>Stacktrace</summary><pre>{formatted_stack_trace}</pre></details>')
 
         if not self.get_mod_list(cr.side):
+            gha_utils.warning(f'Failed to get mod list for side {cr.side}')
             return
         cr_mods = {mod.filename: mod for mod in cr.mod_list}
         cr_mods_set = set(cr_mods.keys())
