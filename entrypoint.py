@@ -217,7 +217,7 @@ def get_official_mods(version: str, side: Side) -> list[tuple[GTNHModInfo, GTNHV
     mods = []
     for vals, source in ((manifest.external_mods, ModSource.other), (manifest.github_mods, ModSource.github)):
         for modid, miv in vals.items():
-            if miv.side and side in miv.side.valid_mod_sides():
+            if miv.side and miv.side in side.valid_mod_sides():
                 mods.append(assets.get_mod_and_version(modid, miv, (miv.side or Side.CLIENT).valid_mod_sides(), source))
     return mods
 
