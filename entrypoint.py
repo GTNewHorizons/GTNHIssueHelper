@@ -239,7 +239,7 @@ def get_official_mods(version: str, side: Side) -> list[tuple[GTNHModInfo, GTNHV
         for modid, miv in vals.items():
             if miv.side and miv.side in side.valid_mod_sides():
                 mods.append(assets.get_mod_and_version(modid, miv, (miv.side or Side.CLIENT).valid_mod_sides(), source))
-    return mods
+    return mods7
 
 
 def get_manifest(version: str) -> GTNHRelease | None:
@@ -445,6 +445,8 @@ class Helper:
             for filename in added:
                 self._out.append(f'<li>{filename} ({cr_mods[filename].modname})</li>')
             self._out.append('</ul></details>')
+        # force a newline between each section
+        self._out.append('')
 
     def main(self):
         with gha_utils.group('Checking crash report'):
