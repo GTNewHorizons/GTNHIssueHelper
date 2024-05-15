@@ -66,9 +66,14 @@ class CrashReport:
     def main_stack_trace(self) -> list[str]:
         ret = []
         for line in self.content.splitlines()[6:]:
-            if not line.strip():
+            line = line.strip()
+            if not line:
                 return ret
-            ret.append(line.strip())
+            # whitespace is removed by strip(), making it rather hard to read
+            if line.startswith('at '):
+                ret.append('  ' + line)
+            else:
+                ret.append(line)
         return ret
 
     @cached_property
