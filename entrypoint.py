@@ -239,7 +239,7 @@ def get_official_mods(version: str, side: Side) -> list[tuple[GTNHModInfo, GTNHV
         for modid, miv in vals.items():
             if miv.side and miv.side in side.valid_mod_sides():
                 mods.append(assets.get_mod_and_version(modid, miv, (miv.side or Side.CLIENT).valid_mod_sides(), source))
-    return mods7
+    return mods
 
 
 def get_manifest(version: str) -> GTNHRelease | None:
