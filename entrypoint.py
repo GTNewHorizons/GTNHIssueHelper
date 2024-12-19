@@ -77,6 +77,19 @@ class CrashReport:
         return ret
 
     @cached_property
+    def cause_stack_trace(self) -> list[str]:
+        in_cause == False
+        mst = self.main_stack_trace()
+        for line in mst:
+            if line.startswith('Caused by:'):
+                in_cause = True
+            if in_cause == True:
+                ret.append(line)
+        
+        return ret
+        
+
+    @cached_property
     def mod_list(self) -> list['InstalledMod']:
         in_list = False
         ret = []
@@ -424,7 +437,9 @@ class Helper:
         # Now some real diagnostics
         if cr.main_stack_trace[0] == 'java.lang.RuntimeException: Chunk build failed':
             self._out.append('Possibly an Angelica problem. Try remove this mod and see if this fixes your problem.')
-        formatted_stack_trace = '\n'.join(cr.main_stack_trace)
+            formatted_stack_trace = '\n'.join(cr.cause_stack_trace)
+        else:
+            formatted_stack_trace = '\n'.join(cr.main_stack_trace)
         self._out.append(f'<details><summary>Stacktrace</summary><pre>{formatted_stack_trace}</pre></details>')
 
         if not self.get_mod_list(cr.side):
