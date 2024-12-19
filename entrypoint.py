@@ -78,7 +78,7 @@ class CrashReport:
 
     @cached_property
     def cause_stack_trace(self) -> list[str]:
-        in_cause == False
+        in_cause = False
         mst = self.main_stack_trace()
         for line in mst:
             if line.startswith('Caused by:'):
