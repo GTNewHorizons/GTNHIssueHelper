@@ -337,6 +337,12 @@ class Helper:
                     gha_utils.warning(f'Suspicious pastebin.com link: {url}. Not processing this file')
                     continue
                 download_url = parsed.scheme + '://' + parsed.hostname + '/raw' + parsed.path
+            elif parsed.hostname == 'github.com' and re.fullmatch('/user-attachments/files/[0-9]+/.+',
+                                                                  parsed.path):
+                if parsed.query:
+                    gha_utils.warning(f'Suspicious github.com link: {url}. Not processing this file')
+                    continue
+                download_url = url
             elif parsed.hostname == 'github.com' and re.fullmatch('/[^/]+/GT-New-Horizons-Modpack/files/.+',
                                                                   parsed.path):
                 if parsed.query:
