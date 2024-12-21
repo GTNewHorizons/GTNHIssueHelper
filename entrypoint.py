@@ -82,7 +82,7 @@ class CrashReport:
         mst = self.main_stack_trace
         ret = []
         for line in mst:
-            if line.startswith('Caused by:'):
+            if in_cause is False and line.startswith('Caused by:'):
                 in_cause = True
             if in_cause == True:
                 ret.append(line)
