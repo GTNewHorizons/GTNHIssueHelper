@@ -200,13 +200,7 @@ def _iter_embedded_crash_reports(content: str, url: str) -> Generator[CrashRepor
 
 def normalize_filename(filename: str) -> str:
     """Canonicalize a mod filename for set-comparison purposes.
-
-    Manifest filenames may use '+' as a separator (build metadata, e.g.
-    'UniLib-1.1.1+1.7.10-forge.jar') or carry a leading '+' (e.g.
-    '+unimixins-all-1.7.10-0.1.23.jar'), while the same file on disk shows up in
-    the crash report with those '+' rendered as spaces and no leading '+'. Without
-    normalization these identical files appear as a spurious missing/added pair.
-    Replacing '+' with a space and stripping collapses both forms to one.
+    Log uploaders like Prism and mclogs seem to replace + with space
     """
     return filename.replace('+', ' ').strip()
 
