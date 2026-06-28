@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.11
 
 RUN pip install "github-action-utils~=1.1.0" "requests<3" "urllib3<2"  \
     "git+https://github.com/GTNewHorizons/DreamAssemblerXXL.git" \
