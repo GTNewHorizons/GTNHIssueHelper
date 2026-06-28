@@ -13,11 +13,11 @@ from urllib.parse import urlparse
 
 import github_action_utils as gha_utils
 import requests
-from gtnh.defs import Side, ModSource
-from gtnh.models.available_assets import AvailableAssets
-from gtnh.models.gtnh_release import GTNHRelease
-from gtnh.models.gtnh_version import GTNHVersion
-from gtnh.models.mod_info import GTNHModInfo
+from daxxl.defs import Side, ModSource
+from daxxl.models.available_assets import AvailableAssets
+from daxxl.models.gtnh_release import GTNHRelease
+from daxxl.models.gtnh_version import GTNHVersion
+from daxxl.models.mod_info import GTNHModInfo
 
 dictConfig({
     'version': 1,
